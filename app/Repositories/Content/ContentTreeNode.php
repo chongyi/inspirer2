@@ -9,6 +9,7 @@
 namespace App\Repositories\Content;
 
 use App\Contracts\ContentStructure;
+use App\Repositories\Content\ContentNodePivot\TreeNode;
 use App\Repositories\Traits\ContentType\ContentMetaSetterAndGetterTrait;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
@@ -27,6 +28,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property ContentNodeChannel $channel
  * @property Carbon             $created_at
  * @property Carbon             $updated_at
+ * @property Content[]          $contents
  *
  * @package App\Repositories\Content
  */
@@ -56,5 +58,13 @@ class ContentTreeNode extends Model implements ContentStructure
     public function channel()
     {
         return $this->morphOne(ContentNodeChannel::class, 'node', 'node_type', 'node_id', 'id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function contents()
+    {
+        return $this->belongsToMany(Content::class)->using(TreeNode::class);
     }
 }
