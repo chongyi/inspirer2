@@ -21,10 +21,6 @@ class TreeNode extends Pivot
 {
     protected $table = 'content_tree_node_related';
 
-    protected $foreignKey = 'node_id';
-
-    protected $relatedKey = 'content_id';
-
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */

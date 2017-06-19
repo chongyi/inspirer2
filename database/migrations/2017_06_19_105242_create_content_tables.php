@@ -42,6 +42,7 @@ class CreateContentTables extends Migration
      */
     public function down()
     {
-        //
+        Schema::dropIfExists('content_articles');
+        Schema::dropIfExists('contents');
     }
 }

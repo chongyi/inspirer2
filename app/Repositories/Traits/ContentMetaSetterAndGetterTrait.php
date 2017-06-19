@@ -6,30 +6,19 @@
  * @link      https://insp.top
  */
 
-namespace App\Repositories\Traits\ContentType;
+namespace App\Repositories\Traits;
 
 /**
  * Trait ContentMetaSetterAndGetterTrait
  *
- * @package App\Repositories\Traits\ContentType
+ * @property string $title
+ * @property string $keywords
+ * @property string $description
+ *
+ * @package App\Repositories\Traits
  */
 trait ContentMetaSetterAndGetterTrait
 {
-    /**
-     * @var string 标题
-     */
-    public $title;
-
-    /**
-     * @var string 关键字
-     */
-    public $keywords;
-
-    /**
-     * @var string 内容描述
-     */
-    public $description;
-
     /**
      * @return string
      */

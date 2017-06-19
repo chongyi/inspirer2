@@ -20,10 +20,10 @@ use Illuminate\Database\Eloquent\Model;
 class ContentNodeChannel extends Model
 {
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\MorphTo
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function nodes()
+    public function treeNodes()
     {
-        return $this->morphTo('node', 'node_type', 'node_id');
+        return $this->hasMany(ContentTreeNode::class, 'channel_id', 'id');
     }
 }

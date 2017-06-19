@@ -10,7 +10,8 @@ namespace App\Repositories\Content\ContentType;
 
 use App\Contracts\ContentStructure;
 use App\Repositories\Content\Content;
-use App\Repositories\Traits\ContentType\ContentMetaSetterAndGetterTrait;
+use App\Repositories\Traits\ContentMetaSetterAndGetterTrait;
+use App\Repositories\Traits\ContentMetaTrait;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -28,7 +29,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class Article extends Model implements ContentStructure
 {
-    use SoftDeletes, ContentMetaSetterAndGetterTrait;
+    use SoftDeletes, ContentMetaSetterAndGetterTrait, ContentMetaTrait;
 
     protected $table = 'content_articles';
 

@@ -10,7 +10,7 @@ namespace App\Repositories\Content;
 
 use App\Contracts\ContentStructure;
 use App\Exceptions\InvalidArgumentException;
-use App\Repositories\Traits\ContentType\ContentMetaSetterAndGetterTrait;
+use App\Repositories\Traits\ContentMetaSetterAndGetterTrait;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
