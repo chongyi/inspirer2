@@ -41,6 +41,33 @@ $app->singleton(
     App\Exceptions\Handler::class
 );
 
+use Monolog\Logger;
+use Monolog\Handler;
+use Monolog\Formatter;
+
+$app->configureMonologUsing(function (\Monolog\Logger $logger) use ($app) {
+    $materials = [
+        'debug'     => Logger::DEBUG,
+        'info'      => Logger::INFO,
+        'notice'    => Logger::NOTICE,
+        'warning'   => Logger::WARNING,
+        'error'     => Logger::ERROR,
+        'critical'  => Logger::CRITICAL,
+        'alert'     => Logger::ALERT,
+        'emergency' => Logger::EMERGENCY,
+    ];
+    $daily = config('app.log') == 'daily';
+    foreach ($materials as $name => $level) {
+        $filename = storage_path('/logs/laravel-' . PHP_SAPI . '-' . $name . '.log');
+        if ($daily) {
+            $logger->pushHandler($handler = new Handler\RotatingFileHandler($filename, 0, $level, false));
+        } else {
+            $logger->pushHandler($handler = new Handler\StreamHandler($filename, $level, false));
+        }
+        $handler->setFormatter(new Formatter\LineFormatter(null, null, true, true));
+    }
+});
+
 /*
 |--------------------------------------------------------------------------
 | Return The Application
