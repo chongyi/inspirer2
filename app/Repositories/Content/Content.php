@@ -6,10 +6,11 @@
  * @link      https://insp.top
  */
 
-namespace App\Repositories;
+namespace App\Repositories\Content;
 
-use App\Contracts\ContentEntity;
+use App\Contracts\ContentStructure;
 use App\Exceptions\InvalidArgumentException;
+use App\Repositories\Traits\ContentType\ContentMetaSetterAndGetterTrait;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -19,19 +20,20 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  *
  * 内容模型
  *
- * @property int $id
- * @property string $title
- * @property string $keywords
- * @property string $description
- * @property Carbon $created_at
- * @property Carbon $updated_at
- * @property Carbon  $published_at
+ * @property int           $id
+ * @property string        $title
+ * @property string        $keywords
+ * @property string        $description
+ * @property Content|Model $entity
+ * @property Carbon        $created_at
+ * @property Carbon        $updated_at
+ * @property Carbon        $published_at
  *
- * @package App\Repositories
+ * @package App\Repositories\Content
  */
-class Content extends Model
+class Content extends Model implements ContentStructure
 {
-    use SoftDeletes;
+    use SoftDeletes, ContentMetaSetterAndGetterTrait;
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\MorphTo
@@ -44,11 +46,11 @@ class Content extends Model
     /**
      * 创建内容
      *
-     * @param ContentEntity|Model $entity
+     * @param ContentStructure|Model $entity
      *
      * @return bool
      */
-    public function make(ContentEntity $entity)
+    public function make(ContentStructure $entity)
     {
         if (!$entity instanceof Model) {
             throw new InvalidArgumentException();

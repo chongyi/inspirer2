@@ -1,6 +1,6 @@
 <?php
 /**
- * ContentEntity.php
+ * ContentStructure.php
  *
  * @copyright Chongyi <xpz3847878@163.com>
  * @link      https://insp.top
@@ -9,13 +9,13 @@
 namespace App\Contracts;
 
 /**
- * Interface ContentEntity
+ * Interface ContentStructure
  *
- * 内容实体
+ * 内容结构接口
  *
  * @package App\Contracts
  */
-interface ContentEntity
+interface ContentStructure
 {
     /**
      * @return string

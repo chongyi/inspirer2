@@ -1,19 +1,19 @@
 <?php
 /**
- * ContentMetaTrait.php
+ * ContentMetaSetterAndGetterTrait.php
  *
  * @copyright Chongyi <xpz3847878@163.com>
  * @link      https://insp.top
  */
 
-namespace App\Repositories\ContentType;
+namespace App\Repositories\Traits\ContentType;
 
 /**
- * Trait ContentMetaTrait
+ * Trait ContentMetaSetterAndGetterTrait
  *
- * @package App\Repositories\ContentType
+ * @package App\Repositories\Traits\ContentType
  */
-trait ContentMetaTrait
+trait ContentMetaSetterAndGetterTrait
 {
     /**
      * @var string 标题
