@@ -16,7 +16,7 @@ $factory->define(App\Repositories\User::class, function (Faker\Generator $faker)
     static $password;
 
     return [
-        'name'           => $faker->name,
+        'nickname'       => $faker->name,
         'email'          => $faker->unique()->safeEmail,
         'password'       => $password ?: $password = bcrypt('secret'),
         'remember_token' => str_random(10),
@@ -25,6 +25,6 @@ $factory->define(App\Repositories\User::class, function (Faker\Generator $faker)
 
 $factory->define(\App\Repositories\Content\ContentType\Article::class, function (\Faker\Generator $faker) {
     return [
-        'content'     => $faker->realText(rand(1024, 20000)),
+        'content' => $faker->realText(rand(1024, 20000)),
     ];
 });
