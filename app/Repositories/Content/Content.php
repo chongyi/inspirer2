@@ -14,6 +14,7 @@ use App\Exceptions\InvalidArgumentException;
 use App\Exceptions\OperationRejectedException;
 use App\Repositories\Content\ContentNodePivot\TreeNode;
 use App\Repositories\Traits\ContentMetaSetterAndGetterTrait;
+use App\Repositories\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -31,6 +32,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property Carbon        $created_at
  * @property Carbon        $updated_at
  * @property Carbon        $published_at
+ * @property User          $author
+ * @property string        $author_name
+ * @property int           $author_id
  *
  * @package App\Repositories\Content
  */
@@ -59,13 +63,22 @@ class Content extends Model implements ContentStructure
     }
 
     /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function author()
+    {
+        return $this->belongsTo(User::class, 'author_id', 'id');
+    }
+
+    /**
      * 创建内容
      *
      * @param ContentStructure|Model $entity
+     * @param string|array|User      $author
      *
      * @return bool
      */
-    public function make(ContentStructure $entity)
+    public function make(ContentStructure $entity, $author = null)
     {
         if (!$entity instanceof Model) {
             throw new InvalidArgumentException();
@@ -75,6 +88,10 @@ class Content extends Model implements ContentStructure
         $this->keywords = $entity->getKeywords();
         $this->description = $entity->getDescription();
 
+        if (!is_null($author)) {
+            $this->setAuthor($author);
+        }
+
         if (!$entity->exists) {
             $entity->saveOrFail();
         }
@@ -82,6 +99,29 @@ class Content extends Model implements ContentStructure
         $this->entity()->associate($entity);
 
         return $this->save();
+    }
+
+    /**
+     * 设置内容作者
+     *
+     * @param User|string|array $author
+     *
+     * @return $this
+     */
+    public function setAuthor($author)
+    {
+        if (is_string($author)) {
+            $this->author_name = $author;
+        } elseif ($author instanceof User) {
+            $this->author()->associate($author);
+            $this->author_name = $author->getNickname();
+        } elseif (is_array($author)) {
+            list($author, $authorName) = $author;
+            $this->author()->associate($author);
+            $this->author_name = $authorName;
+        }
+
+        return $this;
     }
 
     /**

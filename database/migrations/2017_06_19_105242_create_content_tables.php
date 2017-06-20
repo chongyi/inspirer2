@@ -20,6 +20,8 @@ class CreateContentTables extends Migration
             $table->text('description')->comment('描述');
             $table->string('entity_type')->comment('内容实体类型');
             $table->unsignedInteger('entity_id')->comment('内容实体标识');
+            $table->unsignedInteger('author_id')->index()->nullable()->comment('作者');
+            $table->string('author_name')->nullable()->comment('作者名称');
 
             $table->timestamp('published_at')->nullable()->comment('发布时间');
             $table->timestamps();
