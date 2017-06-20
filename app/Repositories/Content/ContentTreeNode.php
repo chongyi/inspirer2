@@ -30,6 +30,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property Carbon             $created_at
  * @property Carbon             $updated_at
  * @property Content[]          $contents
+ * @property string             $path
  *
  * @package App\Repositories\Content
  */
@@ -68,6 +69,32 @@ class ContentTreeNode extends Model implements ContentStructure
     {
         return $this->belongsToMany(Content::class, 'content_tree_node_related', 'node_id',
             'content_id')->using(TreeNode::class);
+    }
+
+    /**
+     * 添加子节点
+     *
+     * @param ContentTreeNode $node
+     *
+     * @return $this
+     */
+    public function addChild(ContentTreeNode $node)
+    {
+        if (!$this->exists) {
+            throw new OperationRejectedException();
+        }
+
+        $parents = explode(',', $this->path);
+
+        if ($parents === false) {
+            return $this;
+        }
+
+        $parents[] = $this->id;
+        $node->path = implode(',', $parents);
+        $node->save();
+
+        return $this;
     }
 
     /**
