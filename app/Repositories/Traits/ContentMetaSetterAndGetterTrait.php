@@ -62,7 +62,7 @@ trait ContentMetaSetterAndGetterTrait
      */
     public function getDescription()
     {
-        return $this->description;
+        return $this->description ?: '';
     }
 
     /**

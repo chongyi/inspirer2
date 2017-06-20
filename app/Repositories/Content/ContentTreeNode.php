@@ -9,6 +9,7 @@
 namespace App\Repositories\Content;
 
 use App\Contracts\ContentStructure;
+use App\Exceptions\OperationRejectedException;
 use App\Repositories\Content\ContentNodePivot\TreeNode;
 use App\Repositories\Traits\ContentMetaSetterAndGetterTrait;
 use Carbon\Carbon;
@@ -67,5 +68,27 @@ class ContentTreeNode extends Model implements ContentStructure
     {
         return $this->belongsToMany(Content::class, 'content_tree_node_related', 'node_id',
             'content_id')->using(TreeNode::class);
+    }
+
+    /**
+     * 添加内容至该节点
+     *
+     * @param Content $content
+     *
+     * @return bool
+     */
+    public function addContent(Content $content)
+    {
+        if ($this->exists) {
+            /** @var TreeNode $treeNode */
+            $treeNode = $this->contents()->newPivot();
+
+            $treeNode->content()->associate($content);
+            $treeNode->entity()->associate($content->entity);
+
+            return $treeNode->save();
+        }
+
+        throw new OperationRejectedException();
     }
 }

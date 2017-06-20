@@ -19,11 +19,5 @@ use Illuminate\Database\Eloquent\Model;
  */
 class ContentNodeChannel extends Model
 {
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function treeNodes()
-    {
-        return $this->hasMany(ContentTreeNode::class, 'channel_id', 'id');
-    }
+
 }

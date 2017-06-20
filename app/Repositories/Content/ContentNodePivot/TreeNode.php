@@ -28,4 +28,12 @@ class TreeNode extends Pivot
     {
         return $this->belongsTo(Content::class);
     }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\MorphTo
+     */
+    public function entity()
+    {
+        return $this->morphTo('entity', 'entity_type', 'entity_id');
+    }
 }
