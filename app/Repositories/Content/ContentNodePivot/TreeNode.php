@@ -10,6 +10,7 @@ namespace App\Repositories\Content\ContentNodePivot;
 
 
 use App\Repositories\Content\Content;
+use App\Repositories\Content\ContentTreeNode;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
 /**
@@ -35,5 +36,13 @@ class TreeNode extends Pivot
     public function entity()
     {
         return $this->morphTo('entity', 'entity_type', 'entity_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function node()
+    {
+        return $this->belongsTo(ContentTreeNode::class, 'node_id', 'id');
     }
 }

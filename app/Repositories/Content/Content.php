@@ -12,6 +12,7 @@ use App\Contracts\ContentStructure;
 use App\Events\ContentPublished;
 use App\Exceptions\InvalidArgumentException;
 use App\Exceptions\OperationRejectedException;
+use App\Repositories\Content\ContentNodePivot\TreeNode;
 use App\Repositories\Traits\ContentMetaSetterAndGetterTrait;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
@@ -47,6 +48,14 @@ class Content extends Model implements ContentStructure
     public function entity()
     {
         return $this->morphTo('entity', 'entity_type', 'entity_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\MorphOne
+     */
+    public function node()
+    {
+        return $this->morphOne(TreeNode::class, 'content', 'content_type', 'content_id', 'id');
     }
 
     /**

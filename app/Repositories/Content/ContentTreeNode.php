@@ -85,6 +85,7 @@ class ContentTreeNode extends Model implements ContentStructure
 
             $treeNode->content()->associate($content);
             $treeNode->entity()->associate($content->entity);
+            $treeNode->node()->associate($this);
 
             return $treeNode->save();
         }
