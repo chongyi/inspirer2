@@ -9,7 +9,9 @@
 namespace App\Repositories\Content;
 
 use App\Contracts\ContentStructure;
+use App\Events\ContentPublished;
 use App\Exceptions\InvalidArgumentException;
+use App\Exceptions\OperationRejectedException;
 use App\Repositories\Traits\ContentMetaSetterAndGetterTrait;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
@@ -34,6 +36,10 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Content extends Model implements ContentStructure
 {
     use SoftDeletes, ContentMetaSetterAndGetterTrait;
+
+    protected $dates = [
+        'published_at',
+    ];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\MorphTo
@@ -67,5 +73,32 @@ class Content extends Model implements ContentStructure
         $this->entity()->associate($entity);
 
         return $this->save();
+    }
+
+    /**
+     * 发布内容
+     *
+     * @param bool $republish 是否重新发布
+     *
+     * @return bool
+     */
+    public function publish($republish = false)
+    {
+        if (!$this->exists) {
+            throw new OperationRejectedException();
+        }
+
+        if ($this->published_at && !$republish) {
+            return false;
+        }
+
+        $this->published_at = Carbon::now();
+        $this->save();
+
+        if (isset(static::$dispatcher)) {
+            static::$dispatcher->dispatch(new ContentPublished($this, $republish));
+        }
+
+        return true;
     }
 }
