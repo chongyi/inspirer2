@@ -67,8 +67,7 @@ class ContentTreeNode extends Model implements ContentStructure
      */
     public function contents()
     {
-        return $this->belongsToMany(Content::class, 'content_tree_node_related', 'node_id',
-            'content_id')->using(TreeNode::class);
+        return $this->belongsToMany(Content::class, 'content_tree_node_related', 'node_id', 'content_id');
     }
 
     /**
@@ -107,8 +106,7 @@ class ContentTreeNode extends Model implements ContentStructure
     public function addContent(Content $content)
     {
         if ($this->exists) {
-            /** @var TreeNode $treeNode */
-            $treeNode = $this->contents()->newPivot();
+            $treeNode = new ContentTreeNodeRelated();
 
             $treeNode->content()->associate($content);
             $treeNode->entity()->associate($content->entity);

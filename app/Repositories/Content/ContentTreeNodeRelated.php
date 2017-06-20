@@ -1,24 +1,17 @@
 <?php
 /**
- * TreeNode.php
+ * ContentTreeNodeRelated.php
  *
  * @copyright Chongyi <xpz3847878@163.com>
  * @link      https://insp.top
  */
 
-namespace App\Repositories\Content\ContentNodePivot;
+namespace App\Repositories\Content;
 
 
-use App\Repositories\Content\Content;
-use App\Repositories\Content\ContentTreeNode;
-use Illuminate\Database\Eloquent\Relations\Pivot;
+use Illuminate\Database\Eloquent\Model;
 
-/**
- * Class TreeNode
- *
- * @package App\Repositories\Content\ContentNodePivot
- */
-class TreeNode extends Pivot
+class ContentTreeNodeRelated extends Model
 {
     protected $table = 'content_tree_node_related';
 

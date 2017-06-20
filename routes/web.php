@@ -11,6 +11,4 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', \App\Http\Controllers\UserArea\ContentsController::class . '@index');
