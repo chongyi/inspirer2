@@ -20,6 +20,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
  *
  * @property int    $id
  * @property string $nickname
+ * @property string $email
  * @property Carbon $created_at
  * @property Carbon $updated_at
  *
