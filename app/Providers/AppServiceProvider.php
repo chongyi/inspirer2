@@ -18,8 +18,7 @@ class AppServiceProvider extends ServiceProvider
     {
         Relation::morphMap([
             'tree_node' => ContentTreeNode::class,
-
-            'article' => Article::class,
+            'article'   => Article::class,
         ]);
     }
 
@@ -30,6 +29,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        // 调试模式或本地模式下开启
+        if (env('APP_DEBUG') || $this->app->environment() == 'local') {
+            $this->app->register(\Barryvdh\Debugbar\ServiceProvider::class);
+        }
+
         //
     }
 }

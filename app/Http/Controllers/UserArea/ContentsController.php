@@ -9,7 +9,9 @@
 namespace App\Http\Controllers\UserArea;
 
 use App\Http\Controllers\Controller;
-use App\Repositories\Content\ContentTreeNodeRelated;
+use App\Repositories\Content\Content;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\Request;
 
 /**
  * Class ContentController
@@ -20,15 +22,41 @@ use App\Repositories\Content\ContentTreeNodeRelated;
  */
 class ContentsController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $query = ContentTreeNodeRelated::query();
+        if (!$request->ajax()) {
+            return view('welcome');
+        }
 
-        // 查询条件
-        // ...
+        // validate
+        $this->validate($request, [
+            'categories' => 'array'
+        ]);
 
-        $paginalCollection = $query->with(['node', 'content', 'entity'])->paginate();
+        $query = Content::query();
+
+        if ($categories = $request->input('categories')) {
+            $query->whereHas('nodes', function (Builder $query) use ($categories) {
+                $query->whereIn('node_id', $categories);
+            });
+        }
+
+        $paginalCollection = $query->with(['nodes'])
+                                   ->orderBy('created_at', 'desc')
+                                   ->orderBy('id', 'desc')
+                                   ->paginate();
 
         return $paginalCollection;
+    }
+
+    public function show(Request $request, $id)
+    {
+        if (!$request->ajax()) {
+            return view('welcome');
+        }
+
+        $data = Content::query()->with('nodes', 'entity')->findOrFail($id);
+
+        return $data;
     }
 }

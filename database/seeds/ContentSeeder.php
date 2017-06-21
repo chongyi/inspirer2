@@ -1,10 +1,27 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use App\Repositories\User;
+use App\Repositories\Content\Content;
 use App\Repositories\Content\ContentType\Article;
+use App\Repositories\Content\ContentTreeNode;
 
 class ContentSeeder extends Seeder
 {
+    /**
+     * @var \Faker\Generator
+     */
+    private $generator;
+
+    /**
+     * ContentSeeder constructor.
+     */
+    public function __construct()
+    {
+        $this->generator = app(\Faker\Generator::class);
+    }
+
+
     /**
      * Run the database seeds.
      *
@@ -12,8 +29,6 @@ class ContentSeeder extends Seeder
      */
     public function run()
     {
-        // ---------- Generate Node ----------
-
         $nodeChannel = new \App\Repositories\Content\ContentNodeChannel();
         $nodeChannel->node_type = \App\Repositories\Content\ContentTreeNode::class;
         $nodeChannel->name = 'category';
@@ -21,25 +36,27 @@ class ContentSeeder extends Seeder
         $nodeChannel->description = '';
         $nodeChannel->save();
 
-        $node = new \App\Repositories\Content\ContentTreeNode();
-        $node->setTitle('test')->setKeywords('')->setDescription('')->channel()->associate($nodeChannel)->save();
 
-        // ---------- Generate content ----------
+        factory(ContentTreeNode::class, 5)->make()->each(function (ContentTreeNode $master) use ($nodeChannel) {
+            $master->channel()->associate($nodeChannel)->save();
 
-        /** @var \Faker\Generator $generator */
-        $generator = app(\Faker\Generator::class);
+            factory(ContentTreeNode::class, rand(0, 5))->make()->each(function (ContentTreeNode $child) use ($master, $nodeChannel) {
+                $child->channel()->associate($nodeChannel)->save();
+                $master->addChild($child);
 
-        factory(Article::class, 50)->create()->each(function (Article $article) use ($generator, $node) {
-            $article->setTitle($generator->sentences(1, true))
-                    ->setKeywords(implode(',', $generator->words(rand(2, 10))))
-                    ->setDescription($generator->realText(rand(50, 200)));
-            ($content = new \App\Repositories\Content\Content())->make($article);
+                factory(Article::class, rand(0, 10))->create()->each(function (Article $article) use ($child) {
+                    $article->setTitle($this->generator->sentences(1, true))
+                            ->setKeywords(implode(',', $this->generator->words(rand(2, 10))))
+                            ->setDescription($this->generator->realText(rand(50, 200)));
+                    ($content = new Content())->make($article, User::query()->find(rand(1, 20)));
 
-            $node->addContent($content);
+                    $child->addContent($content);
 
-            if ($generator->boolean) {
-                $content->publish();
-            }
+                    if ($this->generator->boolean) {
+                        $content->publish();
+                    }
+                });
+            });
         });
     }
 }

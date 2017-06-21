@@ -4,6 +4,11 @@ use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
+    protected $seeders = [
+        UserSeeder::class,
+        ContentSeeder::class,
+    ];
+
     /**
      * Run the database seeds.
      *
@@ -11,6 +16,8 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        $this->call(ContentSeeder::class);
+        foreach ($this->seeders as $seeder) {
+            $this->call($seeder);
+        }
     }
 }

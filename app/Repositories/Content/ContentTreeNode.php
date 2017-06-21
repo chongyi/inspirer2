@@ -83,7 +83,7 @@ class ContentTreeNode extends Model implements ContentStructure
             throw new OperationRejectedException();
         }
 
-        $parents = explode(',', $this->path);
+        $parents = empty($this->path) ? [] : explode(',', $this->path);
 
         if ($parents === false) {
             return $this;
@@ -91,6 +91,7 @@ class ContentTreeNode extends Model implements ContentStructure
 
         $parents[] = $this->id;
         $node->path = implode(',', $parents);
+        $node->parent()->associate($this);
         $node->save();
 
         return $this;

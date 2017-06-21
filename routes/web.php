@@ -11,4 +11,16 @@
 |
 */
 
-Route::get('/', \App\Http\Controllers\UserArea\ContentsController::class . '@index');
+use Illuminate\Routing\Router;
+use App\Http\Controllers\{
+    UserArea
+};
+
+/**
+ * @var Router $router
+ */
+
+$router->group(['prefix' => 'user'], function (Router $router) {
+    $router->get('content', UserArea\ContentsController::class . '@index')->name('user-area.user.content.index');
+    $router->get('content/{id}', UserArea\ContentsController::class . '@show')->name('user-area.user.content.show');
+});

@@ -28,3 +28,11 @@ $factory->define(\App\Repositories\Content\ContentType\Article::class, function 
         'content' => $faker->realText(rand(1024, 20000)),
     ];
 });
+
+$factory->define(\App\Repositories\Content\ContentTreeNode::class, function (\Faker\Generator $faker) {
+    return [
+        'title'       => $faker->words(rand(1, 2), true),
+        'keywords'    => implode(',', $faker->words(rand(2, 8))),
+        'description' => $faker->paragraph(2),
+    ];
+});
