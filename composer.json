@@ -9,7 +9,8 @@
         "barryvdh/laravel-debugbar": "^2.4",
         "laravel/framework": "5.4.*",
         "laravel/homestead": "^5.4",
-        "laravel/tinker": "~1.0"
+        "laravel/tinker": "~1.0",
+        "overtrue/laravel-filesystem-qiniu": "^0.0.2"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
