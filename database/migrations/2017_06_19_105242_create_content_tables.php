@@ -30,6 +30,8 @@ class CreateContentTables extends Migration
 
         Schema::create('content_articles', function (Blueprint $table) {
             $table->increments('id');
+            $table->string('cover')->nullable()->comment('封面');
+            $table->string('origin_source')->nullable()->comment('原始内容来源，用于转载');
             $table->mediumText('content');
 
             $table->timestamps();

@@ -2,8 +2,8 @@
 /**
  * Attachment.php
  *
- * Creator:    chongyi
- * Created at: 2017/06/22 16:40
+ * @copyright Chongyi <xpz3847878@163.com>
+ * @link      https://insp.top
  */
 
 namespace App\Repositories\Content;
