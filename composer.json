@@ -10,7 +10,8 @@
         "laravel/framework": "5.4.*",
         "laravel/homestead": "^5.4",
         "laravel/tinker": "~1.0",
-        "overtrue/laravel-filesystem-qiniu": "^0.0.2"
+        "overtrue/laravel-filesystem-qiniu": "^0.0.2",
+        "ramsey/uuid": "^3.6"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
