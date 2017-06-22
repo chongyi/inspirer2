@@ -18,12 +18,11 @@ class CreateAttachmentsTable extends Migration
 
             $table->string('path')->comment('资源路径');
             $table->string('disk')->comment('资源储存位置');
-            $table->string('token')->index()->comment('资源令牌');
+            $table->string('token')->unique()->comment('资源令牌');
             $table->string('mime')->comment('资源 MIME');
             $table->string('origin_name')->comment('资源原始名称');
             $table->integer('size')->comment('资源大小');
 
-            $table->unique(['driver', 'token'], 'D_T_UNIQUE');
             $table->timestamps();
         });
     }
