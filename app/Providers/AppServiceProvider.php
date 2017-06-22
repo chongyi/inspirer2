@@ -6,6 +6,7 @@ use App\Repositories\Content\ContentTreeNode;
 use App\Repositories\Content\ContentType\Article;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\ServiceProvider;
+use Overtrue\LaravelFilesystem\Qiniu\QiniuStorageServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -35,5 +36,6 @@ class AppServiceProvider extends ServiceProvider
         }
 
         //
+        $this->app->register(QiniuStorageServiceProvider::class);
     }
 }
