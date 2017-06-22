@@ -8,6 +8,7 @@
 
 namespace App\Http\Controllers\UserArea;
 
+use App\Framework\Database\Model;
 use App\Http\Controllers\Controller;
 use App\Repositories\Content\Content;
 use Illuminate\Database\Eloquent\Builder;
@@ -41,10 +42,13 @@ class ContentsController extends Controller
             });
         }
 
-        $paginalCollection = $query->with(['nodes'])
-                                   ->orderBy('created_at', 'desc')
-                                   ->orderBy('id', 'desc')
-                                   ->paginate();
+        $paginalCollection = Model::contextContainer(['entity' => ['id', 'cover']], function () use ($query) {
+            return $paginalCollection = $query->with(['nodes', 'entity'])
+                ->orderBy('created_at', 'desc')
+                ->orderBy('id', 'desc')
+                ->paginate();
+        });
+
 
         return $paginalCollection;
     }

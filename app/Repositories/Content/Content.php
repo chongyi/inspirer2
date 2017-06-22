@@ -12,12 +12,12 @@ use App\Contracts\ContentStructure;
 use App\Events\ContentPublished;
 use App\Exceptions\InvalidArgumentException;
 use App\Exceptions\OperationRejectedException;
-use App\Repositories\Content\ContentNodePivot\TreeNode;
+use App\Framework\Database\Relations\MorphTo;
 use App\Repositories\Traits\ContentClassifyTrait;
 use App\Repositories\Traits\ContentMetaSetterAndGetterTrait;
 use App\Repositories\User;
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Model;
+use App\Framework\Database\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
@@ -48,11 +48,17 @@ class Content extends Model implements ContentStructure
     ];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\MorphTo
+     * @return MorphTo
      */
     public function entity()
     {
-        return $this->morphTo('entity', 'entity_type', 'entity_id');
+        $morph = $this->morphTo('entity', 'entity_type', 'entity_id');
+
+        if (isset(static::$context['entity'])) {
+            return $morph->setColumns(static::$context['entity']);
+        }
+
+        return $morph;
     }
 
     /**
