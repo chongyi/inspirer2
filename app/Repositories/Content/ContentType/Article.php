@@ -10,13 +10,12 @@ namespace App\Repositories\Content\ContentType;
 
 use App\Contracts\ContentStructure;
 use App\Repositories\Content\Attachment;
-use App\Repositories\Content\Content;
 use App\Repositories\Traits\AttachmentTrait;
 use App\Repositories\Traits\ContentEntityTrait;
 use App\Repositories\Traits\ContentMetaSetterAndGetterTrait;
 use App\Repositories\Traits\ContentMetaTrait;
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Model;
+use App\Framework\Database\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**

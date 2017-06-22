@@ -9,7 +9,7 @@
 namespace App\Repositories\Content;
 
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Model;
+use App\Framework\Database\Model;
 
 /**
  * Class ContentNodeChannel

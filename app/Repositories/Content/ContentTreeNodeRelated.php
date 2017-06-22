@@ -8,8 +8,7 @@
 
 namespace App\Repositories\Content;
 
-
-use Illuminate\Database\Eloquent\Model;
+use App\Framework\Database\Model;
 
 class ContentTreeNodeRelated extends Model
 {

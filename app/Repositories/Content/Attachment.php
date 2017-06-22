@@ -8,7 +8,7 @@
 
 namespace App\Repositories\Content;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Framework\Database\Model;
 use Illuminate\Http\UploadedFile;
 use Ramsey\Uuid\Uuid;
 

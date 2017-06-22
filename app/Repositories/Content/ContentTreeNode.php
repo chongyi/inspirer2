@@ -10,10 +10,9 @@ namespace App\Repositories\Content;
 
 use App\Contracts\ContentStructure;
 use App\Exceptions\OperationRejectedException;
-use App\Repositories\Content\ContentNodePivot\TreeNode;
 use App\Repositories\Traits\ContentMetaSetterAndGetterTrait;
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Model;
+use App\Framework\Database\Model;
 
 /**
  * Class ContentTreeNode
