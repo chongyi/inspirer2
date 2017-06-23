@@ -6,9 +6,9 @@
  * @link      https://insp.top
  */
 
-namespace App\Repositories\Content\ContentType;
+namespace App\Repositories\Content\ContentEntity;
 
-use App\Contracts\ContentStructure;
+use App\Contracts\Content\ContentStructure;
 use App\Repositories\Content\Attachment;
 use App\Repositories\Traits\AttachmentTrait;
 use App\Repositories\Traits\ContentEntityTrait;
@@ -29,7 +29,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property Carbon           $created_at
  * @property Carbon           $updated_at
  *
- * @package App\Repositories\Content\ContentType
+ * @package App\Repositories\Content\ContentEntity
  */
 class Article extends Model implements ContentStructure
 {
@@ -49,5 +49,46 @@ class Article extends Model implements ContentStructure
     {
         return $this->attachment('cover');
     }
+
+    /**
+     * 设置内容
+     *
+     * @return string
+     */
+    public function getContent()
+    {
+        return $this->content;
+    }
+
+    /**
+     * @param string $content
+     *
+     * @return Article
+     */
+    public function setContent($content)
+    {
+        $this->content = $content;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOriginSource()
+    {
+        return $this->origin_source;
+    }
+
+    /**
+     * @param string $origin_source
+     *
+     * @return Article
+     */
+    public function setOriginSource($origin_source)
+    {
+        $this->origin_source = $origin_source;
+        return $this;
+    }
+
 
 }

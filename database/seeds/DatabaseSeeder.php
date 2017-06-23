@@ -5,6 +5,7 @@ use Illuminate\Database\Seeder;
 class DatabaseSeeder extends Seeder
 {
     protected $seeders = [
+        BuildSeeder::class,
         UserSeeder::class,
         ContentSeeder::class,
     ];

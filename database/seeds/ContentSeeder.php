@@ -3,7 +3,7 @@
 use Illuminate\Database\Seeder;
 use App\Repositories\User;
 use App\Repositories\Content\Content;
-use App\Repositories\Content\ContentType\Article;
+use App\Repositories\Content\ContentEntity\Article;
 use App\Repositories\Content\ContentTreeNode;
 
 class ContentSeeder extends Seeder
@@ -29,12 +29,7 @@ class ContentSeeder extends Seeder
      */
     public function run()
     {
-        $nodeChannel = new \App\Repositories\Content\ContentNodeChannel();
-        $nodeChannel->node_type = \App\Repositories\Content\ContentTreeNode::class;
-        $nodeChannel->name = 'category';
-        $nodeChannel->display_name = 'Category';
-        $nodeChannel->description = '';
-        $nodeChannel->save();
+        $nodeChannel = \App\Repositories\Content\ContentNodeChannel::findByName('category');
 
 
         factory(ContentTreeNode::class, 5)->make()->each(function (ContentTreeNode $master) use ($nodeChannel) {

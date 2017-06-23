@@ -2,8 +2,9 @@
 
 namespace App\Providers;
 
+use App\Modules\Content\ContentServiceProvider;
 use App\Repositories\Content\ContentTreeNode;
-use App\Repositories\Content\ContentType\Article;
+use App\Repositories\Content\ContentEntity\Article;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\ServiceProvider;
 use Overtrue\LaravelFilesystem\Qiniu\QiniuStorageServiceProvider;
@@ -35,7 +36,7 @@ class AppServiceProvider extends ServiceProvider
             $this->app->register(\Barryvdh\Debugbar\ServiceProvider::class);
         }
 
-        //
         $this->app->register(QiniuStorageServiceProvider::class);
+        $this->app->register(ContentServiceProvider::class);
     }
 }

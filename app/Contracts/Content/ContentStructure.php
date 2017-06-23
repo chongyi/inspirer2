@@ -6,14 +6,14 @@
  * @link      https://insp.top
  */
 
-namespace App\Contracts;
+namespace App\Contracts\Content;
 
 /**
  * Interface ContentStructure
  *
  * 内容结构接口
  *
- * @package App\Contracts
+ * @package App\Contracts\Content
  */
 interface ContentStructure
 {

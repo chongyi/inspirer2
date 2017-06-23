@@ -8,6 +8,7 @@
 
 namespace App\Framework\Database;
 
+use App\Framework\Database\Relations\BelongsToMany;
 use Closure;
 use App\Framework\Database\Relations\MorphTo;
 use Illuminate\Database\Eloquent\Model as LaravelModel;
@@ -43,9 +44,10 @@ abstract class Model extends LaravelModel
     /**
      * Define a polymorphic, inverse one-to-one or many relationship.
      *
-     * @param  string  $name
-     * @param  string  $type
-     * @param  string  $id
+     * @param  string $name
+     * @param  string $type
+     * @param  string $id
+     *
      * @return MorphTo
      */
     protected function morphEagerTo($name, $type, $id)
@@ -58,10 +60,11 @@ abstract class Model extends LaravelModel
     /**
      * Define a polymorphic, inverse one-to-one or many relationship.
      *
-     * @param  string  $target
-     * @param  string  $name
-     * @param  string  $type
-     * @param  string  $id
+     * @param  string $target
+     * @param  string $name
+     * @param  string $type
+     * @param  string $id
+     *
      * @return MorphTo
      */
     protected function morphInstanceTo($target, $name, $type, $id)
@@ -74,4 +77,25 @@ abstract class Model extends LaravelModel
             $instance->newQuery(), $this, $id, $instance->getKeyName(), $type, $name
         );
     }
+
+    public function belongsToMany($related, $table = null, $foreignKey = null, $relatedKey = null, $relation = null)
+    {
+        if (is_null($relation)) {
+            $relation = $this->guessBelongsToManyRelation();
+        }
+
+        $instance = $this->newRelatedInstance($related);
+        $foreignKey = $foreignKey ?: $this->getForeignKey();
+        $relatedKey = $relatedKey ?: $instance->getForeignKey();
+
+        if (is_null($table)) {
+            $table = $this->joiningTable($related);
+        }
+
+        return new BelongsToMany(
+            $instance->newQuery(), $this, $table, $foreignKey, $relatedKey, $relation
+        );
+    }
+
+
 }

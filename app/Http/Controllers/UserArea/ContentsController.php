@@ -8,10 +8,12 @@
 
 namespace App\Http\Controllers\UserArea;
 
+use App\Contracts\Content\ContentProcessor;
 use App\Framework\Database\Model;
 use App\Http\Controllers\Controller;
 use App\Repositories\Content\Content;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
 
 /**
@@ -31,7 +33,8 @@ class ContentsController extends Controller
 
         // validate
         $this->validate($request, [
-            'categories' => 'array'
+            'categories' => 'array',
+            'title'      => 'string',
         ]);
 
         $query = Content::query();
@@ -42,11 +45,17 @@ class ContentsController extends Controller
             });
         }
 
-        $paginalCollection = Model::contextContainer(['entity' => ['id', 'cover']], function () use ($query) {
+        if ($title = $request->input('title')) {
+            $query->where('title', 'like', "%{$title}%");
+        }
+
+        $relationContext = ['entity' => ['id', 'cover'], 'nodes' => ['id', 'path', 'title', 'parent_id']];
+        $paginalCollection = Model::contextContainer($relationContext, function () use ($query) {
             return $paginalCollection = $query->with(['nodes', 'entity'])
-                ->orderBy('created_at', 'desc')
-                ->orderBy('id', 'desc')
-                ->paginate();
+                                              ->orderBy('created_at', 'desc')
+                                              ->orderBy('id', 'desc')
+                                              ->paginate(null,
+                                                  ['id', 'title', 'entity_type', 'entity_id', 'created_at']);
         });
 
 
@@ -62,5 +71,13 @@ class ContentsController extends Controller
         $data = Content::query()->with('nodes', 'entity')->findOrFail($id);
 
         return $data;
+    }
+
+    public function store($entity)
+    {
+        /** @var ContentProcessor $processor */
+        $processor = Application::getInstance()->makeWith(ContentProcessor::class, [$entity]);
+
+        return $processor->create();
     }
 }

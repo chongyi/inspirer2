@@ -8,7 +8,7 @@
 
 namespace App\Repositories\Content;
 
-use App\Contracts\ContentStructure;
+use App\Contracts\Content\ContentStructure;
 use App\Events\ContentPublished;
 use App\Exceptions\InvalidArgumentException;
 use App\Exceptions\OperationRejectedException;
@@ -52,13 +52,13 @@ class Content extends Model implements ContentStructure
      */
     public function entity()
     {
-        $morph = $this->morphTo('entity', 'entity_type', 'entity_id');
+        $relation = $this->morphTo('entity', 'entity_type', 'entity_id');
 
         if (isset(static::$context['entity'])) {
-            return $morph->setColumns(static::$context['entity']);
+            return $relation->setColumns(static::$context['entity']);
         }
 
-        return $morph;
+        return $relation;
     }
 
     /**
@@ -66,7 +66,14 @@ class Content extends Model implements ContentStructure
      */
     public function nodes()
     {
-        return $this->belongsToMany(ContentTreeNode::class, 'content_tree_node_related', 'content_id', 'node_id');
+        $relation = $this->belongsToMany(ContentTreeNode::class, 'content_tree_node_related', 'content_id', 'node_id');
+
+        if (isset(static::$context['nodes'])) {
+            return $relation->setColumns(static::$context['nodes']);
+        }
+
+        return $relation;
+
     }
 
     /**

@@ -10,6 +10,7 @@ namespace App\Repositories\Content;
 
 use Carbon\Carbon;
 use App\Framework\Database\Model;
+use Illuminate\Database\Eloquent\Builder;
 
 /**
  * Class ContentNodeChannel
@@ -23,9 +24,20 @@ use App\Framework\Database\Model;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  *
+ * @method static ContentNodeChannel findByName(string $name)
+ *
  * @package App\Repositories\Content
  */
 class ContentNodeChannel extends Model
 {
-
+    /**
+     * @param Builder $query
+     * @param         $name
+     *
+     * @return mixed
+     */
+    public function scopeFindByName(Builder $query, $name)
+    {
+        return $query->where('name', $name)->first();
+    }
 }

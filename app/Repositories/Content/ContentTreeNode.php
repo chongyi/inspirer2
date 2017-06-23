@@ -8,7 +8,7 @@
 
 namespace App\Repositories\Content;
 
-use App\Contracts\ContentStructure;
+use App\Contracts\Content\ContentStructure;
 use App\Exceptions\OperationRejectedException;
 use App\Repositories\Traits\ContentMetaSetterAndGetterTrait;
 use Carbon\Carbon;

@@ -23,4 +23,6 @@ use App\Http\Controllers\{
 $router->group(['prefix' => 'user'], function (Router $router) {
     $router->get('content', UserArea\ContentsController::class . '@index')->name('user-area.user.content.index');
     $router->get('content/{id}', UserArea\ContentsController::class . '@show')->name('user-area.user.content.show');
+    $router->post('content/{type}', UserArea\ContentsController::class . '@store')
+           ->name('user-area.user.content.store');
 });

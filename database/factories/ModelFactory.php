@@ -23,9 +23,10 @@ $factory->define(App\Repositories\User::class, function (Faker\Generator $faker)
     ];
 });
 
-$factory->define(\App\Repositories\Content\ContentType\Article::class, function (\Faker\Generator $faker) {
+$factory->define(\App\Repositories\Content\ContentEntity\Article::class, function (\Faker\Generator $faker) {
     return [
-        'content' => $faker->realText(rand(1024, 20000)),
+        'content'       => $faker->realText(rand(1024, 20000)),
+        'origin_source' => $faker->boolean ? $faker->url : null,
     ];
 });
 
