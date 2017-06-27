@@ -230,4 +230,10 @@ return [
 
     ],
 
+    'storage' => [
+        'content' => [
+            'article_cover' => env('STORAGE_CONTENT_ARTICLE_COVER', 'content/article/cover'),
+        ]
+    ]
+
 ];

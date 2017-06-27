@@ -30,6 +30,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string        $keywords
  * @property string        $description
  * @property Content|Model $entity
+ * @property int           $entity_id
+ * @property string        $entity_type
  * @property Carbon        $created_at
  * @property Carbon        $updated_at
  * @property Carbon        $published_at
@@ -87,7 +89,7 @@ class Content extends Model implements ContentStructure
     /**
      * 创建内容
      *
-     * @param ContentStructure|Model $entity
+     * @param ContentStructure|Model $entity 内容实体
      * @param string|array|User      $author
      *
      * @return bool
@@ -111,6 +113,27 @@ class Content extends Model implements ContentStructure
         }
 
         $this->entity()->associate($entity);
+
+        return $this->save();
+    }
+
+    public function rebuild(ContentStructure $entity, $author = null)
+    {
+        if (!$entity instanceof Model) {
+            throw new InvalidArgumentException();
+        }
+
+        if (!$entity->exists || $this->entity_id != $entity->getKey()) {
+            throw new OperationRejectedException();
+        }
+
+        $this->title = $entity->getTitle() ?: $this->title;
+        $this->keywords = $entity->getKeywords() ?: $this->keywords;
+        $this->description = $entity->getDescription() ?: $this->description;
+
+        if (!is_null($author)) {
+            $this->setAuthor($author);
+        }
 
         return $this->save();
     }
