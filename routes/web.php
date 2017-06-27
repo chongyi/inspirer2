@@ -25,4 +25,6 @@ $router->group(['prefix' => 'user'], function (Router $router) {
     $router->get('content/{id}', UserArea\ContentsController::class . '@show')->name('user-area.user.content.show');
     $router->post('content/{type}', UserArea\ContentsController::class . '@store')
            ->name('user-area.user.content.store');
+    $router->match(['put', 'patch'], 'content/{type}/{id}', UserArea\ContentsController::class . '@update')
+           ->name('user-area.user.content.update');
 });

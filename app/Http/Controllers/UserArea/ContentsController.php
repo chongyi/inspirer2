@@ -80,4 +80,12 @@ class ContentsController extends Controller
 
         return $processor->create();
     }
+
+    public function update($entity, $contentId)
+    {
+        /** @var ContentProcessor $processor */
+        $processor = Application::getInstance()->makeWith(ContentProcessor::class, [$entity]);
+
+        return $processor->update($contentId);
+    }
 }
