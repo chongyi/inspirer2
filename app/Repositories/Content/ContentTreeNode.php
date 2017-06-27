@@ -66,7 +66,9 @@ class ContentTreeNode extends Model implements ContentStructure
      */
     public function contents()
     {
-        return $this->belongsToMany(Content::class, 'content_tree_node_related', 'node_id', 'content_id');
+        return $this->belongsToMany(Content::class, 'content_tree_node_related', 'node_id', 'content_id')
+                    ->withTimestamps()
+                    ->using(ContentTreeNodeRelated::class);
     }
 
     /**
@@ -106,13 +108,13 @@ class ContentTreeNode extends Model implements ContentStructure
     public function addContent(Content $content)
     {
         if ($this->exists) {
-            $treeNode = new ContentTreeNodeRelated();
+            $this->contents()
+                 ->save($content, [
+                     'entity_id'   => $content->entity_id,
+                     'entity_type' => $content->entity_type,
+                 ]);
 
-            $treeNode->content()->associate($content);
-            $treeNode->entity()->associate($content->entity);
-            $treeNode->node()->associate($this);
-
-            return $treeNode->save();
+            return true;
         }
 
         throw new OperationRejectedException();

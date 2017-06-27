@@ -15,15 +15,15 @@ use Illuminate\Database\Eloquent\Model as LaravelModel;
 
 abstract class Model extends LaravelModel
 {
-    public static $context = null;
+    public static $processContext = null;
 
     public static function contextContainer($context, Closure $callback)
     {
-        static::$context = $context;
+        static::$processContext = $context;
 
         $result = $callback();
 
-        static::$context = null;
+        static::$processContext = null;
 
         return $result;
     }

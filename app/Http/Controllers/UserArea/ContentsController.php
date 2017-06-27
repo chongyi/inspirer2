@@ -9,9 +9,11 @@
 namespace App\Http\Controllers\UserArea;
 
 use App\Contracts\Content\ContentProcessor;
+use App\Exceptions\RuntimeException;
 use App\Framework\Database\Model;
 use App\Http\Controllers\Controller;
 use App\Repositories\Content\Content;
+use App\Repositories\Regret;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
@@ -87,5 +89,30 @@ class ContentsController extends Controller
         $processor = Application::getInstance()->makeWith(ContentProcessor::class, [$entity]);
 
         return $processor->update($contentId);
+    }
+
+    public function destroy($contentId)
+    {
+        try {
+            Model::resolveConnection()->transaction(function () use ($contentId) {
+                /** @var Content $content */
+                $content = Content::query()->with('entity')->findOrFail($contentId);
+                $entity = $content->entity;
+                $treeNodes = $content->nodes;
+
+                foreach ($treeNodes as $node) {
+                    (new Regret())->record(sha1(implode(':', [Content::class, $contentId])), $node->pivot->toArray());
+                    $node->contents()->detach($content->id);
+                }
+
+                if (!$entity->delete() || !$content->delete()) {
+                    throw new RuntimeException();
+                }
+            });
+
+            return [];
+        } catch (RuntimeException $e) {
+            return [];
+        }
     }
 }

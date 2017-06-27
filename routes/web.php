@@ -27,4 +27,6 @@ $router->group(['prefix' => 'user'], function (Router $router) {
            ->name('user-area.user.content.store');
     $router->match(['put', 'patch'], 'content/{type}/{id}', UserArea\ContentsController::class . '@update')
            ->name('user-area.user.content.update');
+    $router->delete('content/{id}', UserArea\ContentsController::class . '@destroy')
+           ->name('user-area.user.content.destroy');
 });

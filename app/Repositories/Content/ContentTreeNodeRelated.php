@@ -8,10 +8,13 @@
 
 namespace App\Repositories\Content;
 
-use App\Framework\Database\Model;
+use Illuminate\Database\Eloquent\Relations\Pivot;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
-class ContentTreeNodeRelated extends Model
+class ContentTreeNodeRelated extends Pivot
 {
+    use SoftDeletes;
+
     protected $table = 'content_tree_node_related';
 
     /**
