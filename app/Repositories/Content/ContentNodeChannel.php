@@ -17,12 +17,13 @@ use Illuminate\Database\Eloquent\Builder;
  *
  * 内容节点频道
  *
- * @property string $node_type
- * @property string $name
- * @property string $display_name
- * @property string $description
- * @property Carbon $created_at
- * @property Carbon $updated_at
+ * @property string            $node_type
+ * @property string            $name
+ * @property string            $display_name
+ * @property string            $description
+ * @property Carbon            $created_at
+ * @property Carbon            $updated_at
+ * @property ContentTreeNode[] $nodes
  *
  * @method static ContentNodeChannel findByName(string $name)
  *
@@ -39,5 +40,13 @@ class ContentNodeChannel extends Model
     public function scopeFindByName(Builder $query, $name)
     {
         return $query->where('name', $name)->first();
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function nodes()
+    {
+        return $this->hasMany(ContentTreeNode::class, 'channel_id', 'id');
     }
 }

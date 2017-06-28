@@ -12,7 +12,6 @@ class BuildSeeder extends Seeder
     public function run()
     {
         $nodeChannel = new \App\Repositories\Content\ContentNodeChannel();
-        $nodeChannel->node_type = \App\Repositories\Content\ContentTreeNode::class;
         $nodeChannel->name = 'category';
         $nodeChannel->display_name = 'Category';
         $nodeChannel->description = '';

@@ -13,6 +13,7 @@ use App\Exceptions\OperationRejectedException;
 use App\Repositories\Traits\ContentMetaSetterAndGetterTrait;
 use Carbon\Carbon;
 use App\Framework\Database\Model;
+use Illuminate\Database\Eloquent\Builder;
 
 /**
  * Class ContentTreeNode
@@ -26,6 +27,7 @@ use App\Framework\Database\Model;
  * @property ContentTreeNode    $parent
  * @property ContentTreeNode[]  $children
  * @property ContentNodeChannel $channel
+ * @property int                $channel_id
  * @property Carbon             $created_at
  * @property Carbon             $updated_at
  * @property Content[]          $contents
@@ -84,15 +86,16 @@ class ContentTreeNode extends Model implements ContentStructure
             throw new OperationRejectedException();
         }
 
-        $parents = empty($this->path) ? [] : explode(',', $this->path);
-
-        if ($parents === false) {
-            return $this;
+        if (!$node->exists) {
+            $node->channel_id = $this->channel_id;
+            $node->parent()->associate($this);
+            $node->save();
         }
 
-        $parents[] = $this->id;
+        $parents = explode(',', $this->path);
+
+        $parents[] = $node->id;
         $node->path = implode(',', $parents);
-        $node->parent()->associate($this);
         $node->save();
 
         return $this;
@@ -118,5 +121,10 @@ class ContentTreeNode extends Model implements ContentStructure
         }
 
         throw new OperationRejectedException();
+    }
+
+    public function allContents(\Closure $callback = null)
+    {
+        //
     }
 }
