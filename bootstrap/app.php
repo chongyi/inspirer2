@@ -1,4 +1,5 @@
 <?php
+define('APP_START_TIME', microtime(true));
 
 /*
 |--------------------------------------------------------------------------
@@ -66,6 +67,10 @@ $app->configureMonologUsing(function (\Monolog\Logger $logger) use ($app) {
         }
         $handler->setFormatter(new Formatter\LineFormatter(null, null, true, true));
     }
+});
+
+$app->terminating(function (\Illuminate\Contracts\Foundation\Application $app) {
+    $app['log']->debug('terminate, processed:' . (string)(microtime(true) - APP_START_TIME));
 });
 
 /*
