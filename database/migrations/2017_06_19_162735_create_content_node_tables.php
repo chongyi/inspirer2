@@ -15,9 +15,8 @@ class CreateContentNodeTables extends Migration
     {
         Schema::create('content_node_channels', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('node_type')->index()->comment('节点类型');
-            $table->string('name')->unique()->comment('频道名称');
-            $table->string('display_name')->index()->comment('频道（可读）名称');
+            $table->string('name')->unique()->comment('节点频道名称');
+            $table->string('display_name')->index()->comment('节点频道（可读）名称');
             $table->text('description')->comment('描述');
 
             $table->timestamps();

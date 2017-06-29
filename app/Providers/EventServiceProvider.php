@@ -2,8 +2,8 @@
 
 namespace App\Providers;
 
-use App\Subscribers\DatabaseEventSubscriber;
-use Illuminate\Support\Facades\Event;
+use App\Subscribers\ContentRepository;
+use App\Subscribers\Database;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
 class EventServiceProvider extends ServiceProvider
@@ -20,7 +20,8 @@ class EventServiceProvider extends ServiceProvider
     ];
 
     protected $subscribe = [
-        DatabaseEventSubscriber::class,
+        Database::class,
+        ContentRepository::class,
     ];
 
     /**

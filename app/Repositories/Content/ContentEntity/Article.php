@@ -24,7 +24,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property int              $id
  * @property ContentStructure $facade
  * @property string           $content
- * @property Attachment       $cover
+ * @property Attachment       $cover_attachment
+ * @property string           $cover
  * @property string           $origin_source
  * @property Carbon           $created_at
  * @property Carbon           $updated_at
@@ -45,7 +46,7 @@ class Article extends Model implements ContentStructure
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function cover()
+    public function coverAttachment()
     {
         return $this->attachment('cover');
     }
@@ -90,5 +91,17 @@ class Article extends Model implements ContentStructure
         return $this;
     }
 
+    /**
+     * 设置封面
+     *
+     * @param string $cover 封面图片附件 token
+     *
+     * @return Article
+     */
+    public function setCover($cover)
+    {
+        $this->cover = $cover;
+        return $this;
+    }
 
 }

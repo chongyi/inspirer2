@@ -1,5 +1,5 @@
 <?php
-define('APP_START_TIME', microtime(true));
+define('LARAVEL_START', microtime(true));
 
 /*
 |--------------------------------------------------------------------------

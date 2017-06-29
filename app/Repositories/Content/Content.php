@@ -25,17 +25,20 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  *
  * 内容模型
  *
- * @property int           $id
- * @property string        $title
- * @property string        $keywords
- * @property string        $description
- * @property Content|Model $entity
- * @property Carbon        $created_at
- * @property Carbon        $updated_at
- * @property Carbon        $published_at
- * @property User          $author
- * @property string        $author_name
- * @property int           $author_id
+ * @property int               $id
+ * @property string            $title
+ * @property string            $keywords
+ * @property string            $description
+ * @property Content|Model     $entity
+ * @property ContentTreeNode[] $nodes
+ * @property int               $entity_id
+ * @property string            $entity_type
+ * @property Carbon            $created_at
+ * @property Carbon            $updated_at
+ * @property Carbon            $published_at
+ * @property User              $author
+ * @property string            $author_name
+ * @property int               $author_id
  *
  * @package App\Repositories\Content
  */
@@ -54,8 +57,8 @@ class Content extends Model implements ContentStructure
     {
         $relation = $this->morphTo('entity', 'entity_type', 'entity_id');
 
-        if (isset(static::$context['entity'])) {
-            return $relation->setColumns(static::$context['entity']);
+        if (isset(static::$processContext['entity'])) {
+            return $relation->setColumns(static::$processContext['entity']);
         }
 
         return $relation;
@@ -68,11 +71,11 @@ class Content extends Model implements ContentStructure
     {
         $relation = $this->belongsToMany(ContentTreeNode::class, 'content_tree_node_related', 'content_id', 'node_id');
 
-        if (isset(static::$context['nodes'])) {
-            return $relation->setColumns(static::$context['nodes']);
+        if (isset(static::$processContext['nodes'])) {
+            $relation->setColumns(static::$processContext['nodes']);
         }
 
-        return $relation;
+        return $relation->withTimestamps()->using(ContentTreeNodeRelated::class);
 
     }
 
@@ -87,7 +90,7 @@ class Content extends Model implements ContentStructure
     /**
      * 创建内容
      *
-     * @param ContentStructure|Model $entity
+     * @param ContentStructure|Model $entity 内容实体
      * @param string|array|User      $author
      *
      * @return bool
@@ -111,6 +114,27 @@ class Content extends Model implements ContentStructure
         }
 
         $this->entity()->associate($entity);
+
+        return $this->save();
+    }
+
+    public function rebuild(ContentStructure $entity, $author = null)
+    {
+        if (!$entity instanceof Model) {
+            throw new InvalidArgumentException();
+        }
+
+        if (!$entity->exists || $this->entity_id != $entity->getKey()) {
+            throw new OperationRejectedException();
+        }
+
+        $this->title = $entity->getTitle() ?: $this->title;
+        $this->keywords = $entity->getKeywords() ?: $this->keywords;
+        $this->description = $entity->getDescription() ?: $this->description;
+
+        if (!is_null($author)) {
+            $this->setAuthor($author);
+        }
 
         return $this->save();
     }

@@ -13,6 +13,7 @@ use App\Exceptions\OperationRejectedException;
 use App\Repositories\Traits\ContentMetaSetterAndGetterTrait;
 use Carbon\Carbon;
 use App\Framework\Database\Model;
+use Illuminate\Database\Eloquent\Builder;
 
 /**
  * Class ContentTreeNode
@@ -26,6 +27,7 @@ use App\Framework\Database\Model;
  * @property ContentTreeNode    $parent
  * @property ContentTreeNode[]  $children
  * @property ContentNodeChannel $channel
+ * @property int                $channel_id
  * @property Carbon             $created_at
  * @property Carbon             $updated_at
  * @property Content[]          $contents
@@ -66,7 +68,9 @@ class ContentTreeNode extends Model implements ContentStructure
      */
     public function contents()
     {
-        return $this->belongsToMany(Content::class, 'content_tree_node_related', 'node_id', 'content_id');
+        return $this->belongsToMany(Content::class, 'content_tree_node_related', 'node_id', 'content_id')
+                    ->withTimestamps()
+                    ->using(ContentTreeNodeRelated::class);
     }
 
     /**
@@ -82,15 +86,16 @@ class ContentTreeNode extends Model implements ContentStructure
             throw new OperationRejectedException();
         }
 
-        $parents = empty($this->path) ? [] : explode(',', $this->path);
-
-        if ($parents === false) {
-            return $this;
+        if (!$node->exists) {
+            $node->channel_id = $this->channel_id;
+            $node->parent()->associate($this);
+            $node->save();
         }
 
-        $parents[] = $this->id;
+        $parents = explode(',', $this->path);
+
+        $parents[] = $node->id;
         $node->path = implode(',', $parents);
-        $node->parent()->associate($this);
         $node->save();
 
         return $this;
@@ -106,15 +111,20 @@ class ContentTreeNode extends Model implements ContentStructure
     public function addContent(Content $content)
     {
         if ($this->exists) {
-            $treeNode = new ContentTreeNodeRelated();
+            $this->contents()
+                 ->save($content, [
+                     'entity_id'   => $content->entity_id,
+                     'entity_type' => $content->entity_type,
+                 ]);
 
-            $treeNode->content()->associate($content);
-            $treeNode->entity()->associate($content->entity);
-            $treeNode->node()->associate($this);
-
-            return $treeNode->save();
+            return true;
         }
 
         throw new OperationRejectedException();
+    }
+
+    public function allContents(\Closure $callback = null)
+    {
+        //
     }
 }

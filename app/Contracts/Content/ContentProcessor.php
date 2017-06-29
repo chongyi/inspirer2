@@ -24,4 +24,11 @@ interface ContentProcessor
      * @throws ValidationException
      */
     public function create();
+
+    /**
+     * @param int $contentId
+     *
+     * @return Content
+     */
+    public function update($contentId);
 }
