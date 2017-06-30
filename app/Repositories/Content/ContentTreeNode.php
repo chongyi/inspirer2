@@ -123,8 +123,25 @@ class ContentTreeNode extends Model implements ContentStructure
         throw new OperationRejectedException();
     }
 
-    public function allContents(\Closure $callback = null)
+    /**
+     * 获取节点下（包括子节点）的所有内容的查询对象
+     *
+     * @param \Closure|null $callback 针对内容的查询回调
+     *
+     * @return Builder
+     */
+    public function allContentsQuery(\Closure $callback = null)
     {
-        //
+        // 获取子节点
+        $nodeIds = static::query()->where('path', 'like', "{$this->path}%")->pluck('id')->all();
+        $query = Content::query()->whereHas('nodes', function (Builder $query) use ($nodeIds) {
+            $query->whereIn('node_id', $nodeIds);
+        });
+
+        if (!is_null($callback)) {
+            $callback($query);
+        }
+
+        return $query;
     }
 }
