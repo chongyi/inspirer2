@@ -2,7 +2,13 @@
 
 namespace App\Http;
 
+use Exception;
+use Illuminate\Pipeline\Pipeline;
+use Illuminate\Support\Facades\Facade;
+use Throwable;
+use Symfony\Component\Debug\Exception\FatalThrowableError;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
+use Illuminate\Foundation\Http\Events;
 
 class Kernel extends HttpKernel
 {
@@ -57,4 +63,51 @@ class Kernel extends HttpKernel
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
     ];
+
+    /**
+     * Handle an incoming HTTP request.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function handle($request)
+    {
+        try {
+            $request->enableHttpMethodParameterOverride();
+
+            $response = $this->sendRequestThroughRouter($request);
+        } catch (Exception $e) {
+            $this->reportException($e);
+
+            $response = $this->renderException($request, $e);
+        } catch (Throwable $e) {
+            $this->reportException($e = new FatalThrowableError($e));
+
+            $response = $this->renderException($request, $e);
+        }
+
+        event(new Events\RequestHandled($request, $response));
+
+        return $response;
+    }
+
+    protected function sendRequestThroughRouter($request)
+    {
+        $this->app->instance('request', $request);
+
+        Facade::clearResolvedInstance('request');
+
+        $startBoot = microtime(true);
+
+        $this->bootstrap();
+
+        define('APP_BOOT_TIME', microtime(true) - $startBoot);
+
+        return (new Pipeline($this->app))
+            ->send($request)
+            ->through($this->app->shouldSkipMiddleware() ? [] : $this->middleware)
+            ->then($this->dispatchToRouter());
+    }
+
+
 }

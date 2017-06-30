@@ -14,7 +14,6 @@ use App\Framework\Database\Model;
 use App\Http\Controllers\Controller;
 use App\Repositories\Content\Content;
 use App\Repositories\Regret;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
 
@@ -39,29 +38,10 @@ class ContentsController extends Controller
             'title'      => 'string',
         ]);
 
-        $query = Content::query();
-
-        if ($categories = $request->input('categories')) {
-            $query->whereHas('nodes', function (Builder $query) use ($categories) {
-                $query->whereIn('node_id', $categories);
-            });
-        }
-
-        if ($title = $request->input('title')) {
-            $query->where('title', 'like', "%{$title}%");
-        }
-
-        $relationContext = ['entity' => ['id', 'cover'], 'nodes' => ['id', 'path', 'title', 'parent_id']];
-        $paginalCollection = Model::contextContainer($relationContext, function () use ($query) {
-            return $paginalCollection = $query->with(['nodes', 'entity'])
-                                              ->orderBy('created_at', 'desc')
-                                              ->orderBy('id', 'desc')
-                                              ->paginate(null,
-                                                  ['id', 'title', 'entity_type', 'entity_id', 'created_at']);
-        });
-
-
-        return $paginalCollection;
+        return (new Content())->getPaginateList([
+            'categories' => $request->input('categories'),
+            'title'      => $request->input('title'),
+        ], true);
     }
 
     public function show(Request $request, $id)

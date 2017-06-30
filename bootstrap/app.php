@@ -70,7 +70,12 @@ $app->configureMonologUsing(function (\Monolog\Logger $logger) use ($app) {
 });
 
 $app->terminating(function (\Illuminate\Contracts\Foundation\Application $app) {
-    $app['log']->debug('terminate, processed:' . (string)(microtime(true) - APP_START_TIME));
+    $log = $app['log'];
+    if (defined('APP_BOOT_TIME')) {
+        $log->debug('boot processed: ' . APP_BOOT_TIME);
+    }
+
+    $log->debug('terminate, processed: ' . (string)(microtime(true) - APP_START_TIME));
 });
 
 /*

@@ -12,12 +12,15 @@ use App\Contracts\Content\ContentStructure;
 use App\Events\ContentPublished;
 use App\Exceptions\InvalidArgumentException;
 use App\Exceptions\OperationRejectedException;
+use App\Framework\Database\QueryCache;
 use App\Framework\Database\Relations\MorphTo;
 use App\Repositories\Traits\ContentClassifyTrait;
 use App\Repositories\Traits\ContentMetaSetterAndGetterTrait;
+use App\Repositories\Traits\QueryParameterTrait;
 use App\Repositories\User;
 use Carbon\Carbon;
 use App\Framework\Database\Model;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
@@ -44,7 +47,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class Content extends Model implements ContentStructure
 {
-    use SoftDeletes, ContentMetaSetterAndGetterTrait, ContentClassifyTrait;
+    use SoftDeletes, ContentMetaSetterAndGetterTrait, ContentClassifyTrait, QueryParameterTrait;
 
     protected $dates = [
         'published_at',
@@ -187,5 +190,42 @@ class Content extends Model implements ContentStructure
         }
 
         return true;
+    }
+
+    /**
+     * 获取分页后的内容列表
+     *
+     * @param array $parameters
+     * @param bool  $cache
+     *
+     * @return mixed
+     */
+    public function getPaginateList($parameters = [], $cache = false)
+    {
+        $this->fillPaginateParameter($parameters);
+        $this->fillParametersDefaultValue($parameters, ['categories', 'title']);
+
+        return (new QueryCache())->cache($cache)->parameters($parameters)->query(function (array $parameters) {
+            $query = static::query();
+
+            if ($categories = $parameters['categories']) {
+                $query->whereHas('nodes', function (Builder $query) use ($categories) {
+                    $query->whereIn('node_id', $categories);
+                });
+            }
+
+            if ($title = $parameters['title']) {
+                $query->where('title', 'like', "%{$title}%");
+            }
+
+            $relationContext = ['entity' => ['id', 'cover'], 'nodes' => ['id', 'path', 'title', 'parent_id']];
+            return Model::contextContainer($relationContext, function () use ($query) {
+                return $paginalCollection = $query->with(['nodes', 'entity'])
+                                                  ->orderBy('created_at', 'desc')
+                                                  ->orderBy('id', 'desc')
+                                                  ->paginate(null,
+                                                      ['id', 'title', 'entity_type', 'entity_id', 'created_at']);
+            });
+        })->get();
     }
 }

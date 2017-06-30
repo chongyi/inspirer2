@@ -11,6 +11,7 @@
         "laravel/homestead": "^5.4",
         "laravel/tinker": "~1.0",
         "overtrue/laravel-filesystem-qiniu": "^0.0.2",
+        "predis/predis": "^1.1",
         "ramsey/uuid": "^3.6"
     },
     "require-dev": {
