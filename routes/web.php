@@ -20,15 +20,13 @@ use App\Http\Controllers\{
  * @var Router $router
  */
 
-$router->group(['prefix' => 'user'], function (Router $router) {
-    $router->get('content', UserArea\ContentsController::class . '@index')->name('user-area.user.content.index');
-    $router->get('content/{id}', UserArea\ContentsController::class . '@show')->name('user-area.user.content.show');
-    $router->post('content/{type}', UserArea\ContentsController::class . '@store')
-           ->name('user-area.user.content.store');
+$router->group(['prefix' => 'private'], function (Router $router) {
+    $router->get('content', UserArea\ContentsController::class . '@index')->name('private.content.index');
+    $router->get('content/{id}', UserArea\ContentsController::class . '@show')->name('private.content.show');
+    $router->post('content/{type}', UserArea\ContentsController::class . '@store')->name('private.user.content.store');
+    $router->delete('content/{id}', UserArea\ContentsController::class . '@destroy')->name('private.content.destroy');
     $router->match(['put', 'patch'], 'content/{type}/{id}', UserArea\ContentsController::class . '@update')
-           ->name('user-area.user.content.update');
-    $router->delete('content/{id}', UserArea\ContentsController::class . '@destroy')
-           ->name('user-area.user.content.destroy');
+           ->name('private.content.update');
 
-    $router->get('category', UserArea\CategoriesController::class . '@index')->name('user-area.category.index');
+    $router->get('category', UserArea\CategoriesController::class . '@index')->name('private.category.index');
 });
