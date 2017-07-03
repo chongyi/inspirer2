@@ -33,6 +33,8 @@ use Illuminate\Database\Eloquent\Builder;
  * @property Content[]          $contents
  * @property string             $path
  *
+ * @method static Builder rootNodes(int $channelId = null)
+ *
  * @package App\Repositories\Content
  */
 class ContentTreeNode extends Model implements ContentStructure
@@ -143,5 +145,20 @@ class ContentTreeNode extends Model implements ContentStructure
         }
 
         return $query;
+    }
+
+    /**
+     * @param Builder $query
+     * @param null    $channelId
+     *
+     * @return Builder
+     */
+    public function scopeRootNodes(Builder $query, $channelId = null)
+    {
+        if ($channelId) {
+            $query->where('channel_id', $channelId);
+        }
+
+        return $query->where('parent_id', 0);
     }
 }

@@ -8,15 +8,19 @@
 
 namespace App\Repositories\Content;
 
+use App\Exceptions\InvalidArgumentException;
+use App\Framework\Database\QueryCache;
 use Carbon\Carbon;
 use App\Framework\Database\Model;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 
 /**
  * Class ContentNodeChannel
  *
  * 内容节点频道
  *
+ * @property int               $id
  * @property string            $node_type
  * @property string            $name
  * @property string            $display_name
@@ -48,5 +52,32 @@ class ContentNodeChannel extends Model
     public function nodes()
     {
         return $this->hasMany(ContentTreeNode::class, 'channel_id', 'id');
+    }
+
+    /**
+     * 获取当前或指定频道下的根节点列表
+     *
+     * @param int  $channelId
+     * @param bool $cache
+     *
+     * @return ContentTreeNode[]|Collection
+     *
+     * @throws InvalidArgumentException
+     */
+    public function getRootNodesByChannelId($channelId = null, $cache = false)
+    {
+        if (!$channelId) {
+            if ($this->exists) {
+                $channelId = $this->id;
+            } else {
+                throw new InvalidArgumentException();
+            }
+        }
+
+        return (new QueryCache())->cache($cache)
+                                 ->parameters(['channel_id' => $channelId])
+                                 ->query(function ($parameters) {
+                                     return ContentTreeNode::rootNodes($parameters['channel_id'])->get();
+                                 })->get();
     }
 }
