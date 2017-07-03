@@ -77,7 +77,14 @@ class ContentNodeChannel extends Model
         return (new QueryCache())->cache($cache)
                                  ->parameters(['channel_id' => $channelId])
                                  ->query(function ($parameters) {
-                                     return ContentTreeNode::rootNodes($parameters['channel_id'])->get();
+                                     return ContentTreeNode::rootNodes($parameters['channel_id'])->select([
+                                         'id',
+                                         'title',
+                                         'keywords',
+                                         'description',
+                                         'created_at',
+                                         'updated_at'
+                                     ])->orderBy('created_at', 'desc')->get();
                                  })->get();
     }
 }

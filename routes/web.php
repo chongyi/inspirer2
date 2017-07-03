@@ -29,4 +29,6 @@ $router->group(['prefix' => 'user'], function (Router $router) {
            ->name('user-area.user.content.update');
     $router->delete('content/{id}', UserArea\ContentsController::class . '@destroy')
            ->name('user-area.user.content.destroy');
+
+    $router->get('category', UserArea\CategoriesController::class . '@index')->name('user-area.category.index');
 });
