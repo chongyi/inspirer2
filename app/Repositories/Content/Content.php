@@ -43,6 +43,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string            $author_name
  * @property int               $author_id
  * @property Comment[]         $comments
+ * @property string            $name
+ * @property Tag[]             $tags
  *
  * @package App\Repositories\Content
  */
@@ -122,6 +124,12 @@ class Content extends Model implements ContentStructure
         return $this->save();
     }
 
+    /**
+     * @param ContentStructure $entity
+     * @param null             $author
+     *
+     * @return bool
+     */
     public function rebuild(ContentStructure $entity, $author = null)
     {
         if (!$entity instanceof Model) {
@@ -240,5 +248,13 @@ class Content extends Model implements ContentStructure
     public function comments()
     {
         return $this->hasMany(Comment::class, 'target_id', 'id');
+    }
+
+    /**
+     * @return \App\Framework\Database\Relations\BelongsToMany|\Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function tags()
+    {
+        return $this->belongsToMany(Tag::class, 'content_tag_related', 'content_id', 'tag_id');
     }
 }

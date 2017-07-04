@@ -32,6 +32,7 @@ use Illuminate\Database\Eloquent\Builder;
  * @property Carbon             $updated_at
  * @property Content[]          $contents
  * @property string             $path
+ * @property string             $name
  *
  * @method static Builder rootNodes(int $channelId = null)
  *

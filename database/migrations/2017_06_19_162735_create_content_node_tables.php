@@ -25,6 +25,7 @@ class CreateContentNodeTables extends Migration
 
         Schema::create('content_tree_nodes', function (Blueprint $table) {
             $table->increments('id');
+            $table->string('name')->unique()->nullable()->comment('名称');
             $table->string('path')->index()->default('')->comment('节点树路径');
             $table->unsignedInteger('parent_id')->index()->default(0)->comment('父节点 ID');
             $table->unsignedInteger('channel_id')->index()->comment('频道 ID');

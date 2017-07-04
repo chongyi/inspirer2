@@ -15,6 +15,7 @@ class CreateContentTables extends Migration
     {
         Schema::create('contents', function (Blueprint $table) {
             $table->increments('id');
+            $table->string('name')->unique()->nullable()->comment('名称');
             $table->string('title')->index()->comment('标题');
             $table->string('keywords')->nullable()->index()->comment('关键字');
             $table->text('description')->nullable()->comment('描述');
