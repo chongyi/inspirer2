@@ -42,6 +42,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property User              $author
  * @property string            $author_name
  * @property int               $author_id
+ * @property Comment[]         $comments
  *
  * @package App\Repositories\Content
  */
@@ -218,6 +219,10 @@ class Content extends Model implements ContentStructure
                 $query->where('title', 'like', "%{$title}%");
             }
 
+            if (isset($parameters['private']) && $parameters['private']) {
+                $query->where('author_id', auth()->id());
+            }
+
             $relationContext = ['entity' => ['id', 'cover'], 'nodes' => ['id', 'path', 'title', 'parent_id']];
             return Model::contextContainer($relationContext, function () use ($query) {
                 return $paginalCollection = $query->with(['nodes', 'entity'])
@@ -227,5 +232,13 @@ class Content extends Model implements ContentStructure
                                                       ['id', 'title', 'entity_type', 'entity_id', 'created_at']);
             });
         })->get();
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function comments()
+    {
+        return $this->hasMany(Comment::class, 'target_id', 'id');
     }
 }

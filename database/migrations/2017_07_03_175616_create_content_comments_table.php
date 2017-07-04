@@ -17,7 +17,7 @@ class CreateContentCommentsTable extends Migration
             $table->increments('id');
 
             $table->unsignedInteger('parent_id')->default(0)->comment('父评论 ID');
-            $table->unsignedInteger('content_id')->index()->comment('内容 ID');
+            $table->unsignedInteger('target_id')->index()->comment('评论目标 ID');
             $table->unsignedInteger('entity_id')->nullable()->comment('内容实体 ID');
             $table->string('entity_type')->nullable()->comment('内容实体类型');
             $table->unsignedInteger('user_id')->nullable()->comment('用户 ID');

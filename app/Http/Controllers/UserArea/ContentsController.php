@@ -41,6 +41,7 @@ class ContentsController extends Controller
         return (new Content())->getPaginateList([
             'categories' => $request->input('categories'),
             'title'      => $request->input('title'),
+            'private'    => true,
         ], true);
     }
 
@@ -50,7 +51,7 @@ class ContentsController extends Controller
             return view('welcome');
         }
 
-        $data = Content::query()->with('nodes', 'entity')->findOrFail($id);
+        $data = Content::query()->where('author_id', auth()->id())->with('nodes', 'entity')->findOrFail($id);
 
         return $data;
     }
@@ -76,7 +77,7 @@ class ContentsController extends Controller
         try {
             Model::resolveConnection()->transaction(function () use ($contentId) {
                 /** @var Content $content */
-                $content = Content::query()->with('entity')->findOrFail($contentId);
+                $content = Content::query()->where('author_id', auth()->id())->with('entity')->findOrFail($contentId);
                 $entity = $content->entity;
                 $treeNodes = $content->nodes;
 

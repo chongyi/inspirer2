@@ -32,6 +32,11 @@ class ArticleProcessor implements ContentProcessor
     private $request;
 
     /**
+     * @var bool
+     */
+    private $auth = false;
+
+    /**
      * ArticleProcessor constructor.
      *
      * @param Request $request
@@ -65,7 +70,7 @@ class ArticleProcessor implements ContentProcessor
             $entity = new Article();
             $this->entityBuild($entity);
 
-            ($content = new Content())->make($entity, auth()->user());
+            ($content = new Content())->make($entity, $this->auth ? auth()->user() : null);
             $this->categoryBinder($content);
 
             if ($this->request->input('publish')) {
@@ -94,8 +99,10 @@ class ArticleProcessor implements ContentProcessor
         ]);
 
         return Model::resolveConnection()->transaction(function () use ($contentId) {
+            $query = $this->auth ? Content::query()->where('author_id', auth()->id()) : Content::query();
+
             /** @var Content $content */
-            $content = Content::query()->where('id', $contentId)->with('entity')->firstOrFail();
+            $content = $query->where('id', $contentId)->with('entity')->firstOrFail();
             $entity = $content->entity;
             if (!$entity instanceof Article) {
                 throw new OperationRejectedException();
@@ -142,5 +149,15 @@ class ArticleProcessor implements ContentProcessor
 
             $category->addContent($content);
         }
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function auth()
+    {
+        $this->auth = true;
+
+        return $this;
     }
 }

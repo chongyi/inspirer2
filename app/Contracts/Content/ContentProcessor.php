@@ -31,4 +31,9 @@ interface ContentProcessor
      * @return Content
      */
     public function update($contentId);
+
+    /**
+     * @return $this
+     */
+    public function auth();
 }

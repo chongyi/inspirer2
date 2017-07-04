@@ -20,7 +20,10 @@ use App\Http\Controllers\{
  * @var Router $router
  */
 
-$router->group(['prefix' => 'private'], function (Router $router) {
+$router->post('private/login', UserArea\AuthController::class . '@loginRequest')->name('private.login');
+$router->post('private/logout', UserArea\AuthController::class . '@logoutRequest')->name('private.logout');
+
+$router->group(['prefix' => 'private', 'middleware' => ['auth']], function (Router $router) {
     $router->get('content', UserArea\ContentsController::class . '@index')->name('private.content.index');
     $router->get('content/{id}', UserArea\ContentsController::class . '@show')->name('private.content.show');
     $router->post('content/{type}', UserArea\ContentsController::class . '@store')->name('private.user.content.store');

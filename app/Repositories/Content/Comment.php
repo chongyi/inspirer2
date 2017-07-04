@@ -20,7 +20,7 @@ use Carbon\Carbon;
  * @property int       $id
  * @property Content   $target
  * @property Model     $entity
- * @property int       $content_id
+ * @property int       $target_id
  * @property int       $entity_id
  * @property string    $entity_type
  * @property string    $discussant
@@ -45,7 +45,7 @@ class Comment extends Model
      */
     public function target()
     {
-        return $this->belongsTo(Content::class, 'content_id', 'id');
+        return $this->belongsTo(Content::class, 'target_id', 'id');
     }
 
     /**
