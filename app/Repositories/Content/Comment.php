@@ -18,7 +18,7 @@ use Carbon\Carbon;
  * 评论模型
  *
  * @property int       $id
- * @property Content   $content
+ * @property Content   $target
  * @property Model     $entity
  * @property int       $content_id
  * @property int       $entity_id
@@ -43,7 +43,7 @@ class Comment extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function content()
+    public function target()
     {
         return $this->belongsTo(Content::class, 'content_id', 'id');
     }
