@@ -214,7 +214,9 @@ class Content extends Model implements ContentStructure
         $this->fillPaginateParameter($parameters);
         $this->fillParametersDefaultValue($parameters, ['categories', 'title']);
 
-        return (new QueryCache())->cache($cache)->parameters($parameters)->query(function (array $parameters) {
+        return (new QueryCache())->prefix('A/R/C/C')->cache($cache)->parameters($parameters)->query(function (
+            array $parameters
+        ) {
             $query = static::query();
 
             if ($categories = $parameters['categories']) {

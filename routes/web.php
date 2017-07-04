@@ -32,4 +32,5 @@ $router->group(['prefix' => 'private', 'middleware' => ['auth']], function (Rout
            ->name('private.content.update');
 
     $router->get('category', UserArea\CategoriesController::class . '@index')->name('private.category.index');
+    $router->get('tag', UserArea\TagsController::class . '@index')->name('private.tag.index');
 });

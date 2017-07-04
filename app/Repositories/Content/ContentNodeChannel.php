@@ -74,7 +74,7 @@ class ContentNodeChannel extends Model
             }
         }
 
-        return (new QueryCache())->cache($cache)
+        return (new QueryCache())->cache($cache)->prefix('A/R/C/CNC')
                                  ->parameters(['channel_id' => $channelId])
                                  ->query(function ($parameters) {
                                      return ContentTreeNode::rootNodes($parameters['channel_id'])->select([
