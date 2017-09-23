@@ -9,6 +9,7 @@
 namespace App\Schema\Contents\Models;
 
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -55,5 +56,15 @@ class ContentCategory extends Model
     public function children()
     {
         return $this->hasMany(static::class, 'parent_id', 'id');
+    }
+
+    /**
+     * 获取当前内容分类下所有子类
+     *
+     * @return \Illuminate\Database\Eloquent\Collection|static[]
+     */
+    public function depthChildren()
+    {
+        return $this->newQuery()->where('node_map', 'like', $this->node_map . ',%')->get();
     }
 }
