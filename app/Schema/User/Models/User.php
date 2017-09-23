@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App\Schema\User\Models;
 
 use Carbon\Carbon;
 use Illuminate\Notifications\Notifiable;
@@ -14,7 +14,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  *
- * @package App\Models
+ * @package App\Schema\User\Models
  */
 class User extends Authenticatable
 {
