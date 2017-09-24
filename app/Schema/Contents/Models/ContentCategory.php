@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * Class ContentCategory
  *
  * @property int               $id
+ * @property string            $name
  * @property string            $title
  * @property string            $keywords
  * @property string            $description

@@ -15,7 +15,7 @@ use Illuminate\Database\Eloquent\Model;
  * Class Tag
  *
  * @property int $id
- * @property string $title
+ * @property string $name
  * @property Carbon $created_at
  * @property Carbon $updated_at
  *
@@ -23,5 +23,5 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Tag extends Model
 {
-
+    protected $table = 'content_tags';
 }
