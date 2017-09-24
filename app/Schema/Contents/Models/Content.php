@@ -38,6 +38,16 @@ class Content extends Model
 {
     use SoftDeletes;
 
+    protected $fillable = [
+        'name',
+        'title',
+        'description',
+        'keywords',
+        'creator_id',
+        'entity_id',
+        'entity_type',
+    ];
+
     protected $dates = [
         'published_at',
     ];

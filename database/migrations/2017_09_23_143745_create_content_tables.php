@@ -18,7 +18,7 @@ class CreateContentTables extends Migration
             $table->string('name')->index()->nullable()->comment('名称');
             $table->string('title')->index()->comment('标题');
             $table->string('keywords')->index()->default('')->comment('关键字');
-            $table->text('description')->default('')->comment('描述');
+            $table->text('description')->nullable()->comment('描述');
             $table->integer('entity_id')->unsigned()->nullable()->comment('实体 ID');
             $table->string('entity_type')->nullable()->comment('实体类型');
             $table->integer('category_id')->unsigned()->index()->comment('分类 ID');
@@ -36,7 +36,7 @@ class CreateContentTables extends Migration
             $table->string('name')->index()->nullable()->comment('名称');
             $table->string('title')->index()->comment('标题');
             $table->string('keywords')->index()->default('')->comment('关键字');
-            $table->text('description')->default('')->comment('描述');
+            $table->text('description')->nullable()->comment('描述');
             $table->string('node_map')->default('')->index()->comment('节点图');
             $table->integer('parent_id')->unsigned()->default(0)->index()->comment('父节点');
             $table->timestamps();

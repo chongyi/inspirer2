@@ -9,20 +9,38 @@
 namespace App\Schema\Contents\Subscribers;
 
 use App\Schema\Contents\Models\ContentCategory;
+use Illuminate\Database\Eloquent\Model;
 
 class ContentCategorySubscriber
 {
     public function saving(ContentCategory $contentCategory)
     {
         if ($contentCategory->exists) {
-            if ($contentCategory->parent_id) {
-                $nodeMap = explode('-', $contentCategory->parent->node_map);
-                $nodeMap[] = $contentCategory->id;
-
-                sort($nodeMap, SORT_NUMERIC);
-                $contentCategory->node_map = implode('-', $nodeMap);
+            if (!$contentCategory->node_map) {
+                if ($contentCategory->parent_id) {
+                    $contentCategory->node_map = $contentCategory->parent->node_map . ',' . $contentCategory->id;
+                } else {
+                    $contentCategory->node_map = $contentCategory->id;
+                }
             } else {
-                $contentCategory->node_map = $contentCategory->id;
+                $dirty = $contentCategory->getDirty();
+
+                if (isset($dirty['parent_id'])) {
+                    /** @var ContentCategory $parent */
+                    $parent = ContentCategory::query()->find($dirty['parent_id']);
+                    $parentNodeMap = $parent->node_map;
+
+                    $selfNodeMap = $contentCategory->node_map;
+                    $newNodeMap = $parentNodeMap . ',' . $contentCategory->id;
+
+                    $childrenIds = $contentCategory->depthChildren()->pluck('id')->all();
+                    $contentCategory->node_map = $newNodeMap;
+
+                    $connection = Model::resolveConnection();
+                    ContentCategory::query()->whereIn('id', $childrenIds)->update([
+                        'node_map' => $connection->raw("replace(`node_map`, '{$selfNodeMap},', '{$newNodeMap},')"),
+                    ]);
+                }
             }
         }
     }
@@ -36,7 +54,7 @@ class ContentCategorySubscriber
 
     public function subscribe()
     {
-        ContentCategory::saved(static::class . '@saving');
+        ContentCategory::saving(static::class . '@saving');
         ContentCategory::saved(static::class . '@saved');
     }
 }

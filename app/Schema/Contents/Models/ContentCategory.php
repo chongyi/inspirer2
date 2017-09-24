@@ -34,6 +34,14 @@ class ContentCategory extends Model
 {
     use SoftDeletes;
 
+    protected $fillable = [
+        'name',
+        'title',
+        'description',
+        'keywords',
+        'parent_id',
+    ];
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
