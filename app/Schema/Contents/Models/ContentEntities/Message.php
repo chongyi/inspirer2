@@ -13,6 +13,8 @@ use App\Schema\Contents\Models\ContentEntity;
 /**
  * Class Message
  *
+ * @property string $body
+ *
  * @package App\Schema\Contents\Models\ContentEntities
  */
 class Message extends ContentEntity

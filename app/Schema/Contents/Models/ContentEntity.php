@@ -8,6 +8,7 @@
 
 namespace App\Schema\Contents\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -16,6 +17,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $id
  * @property int $content_id
  * @property Content $content
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
  *
  * @package App\Schema\Contents\Models
  */

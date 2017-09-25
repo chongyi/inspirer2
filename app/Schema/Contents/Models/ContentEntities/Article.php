@@ -13,6 +13,9 @@ use App\Schema\Contents\Models\ContentEntity;
 /**
  * Class Article
  *
+ * @property string $body
+ * @property string $origin_source
+ *
  * @package App\Schema\Contents\Models\ContentEntities
  */
 class Article extends ContentEntity
