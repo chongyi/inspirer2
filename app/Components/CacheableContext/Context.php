@@ -52,6 +52,18 @@ class Context implements Serializable, IteratorAggregate
         return $this;
     }
 
+    public function setContext($context)
+    {
+        $this->context = $context;
+
+        return $this;
+    }
+
+    public function getContext()
+    {
+        return $this->context;
+    }
+
     /**
      * @return ArrayIterator
      */
