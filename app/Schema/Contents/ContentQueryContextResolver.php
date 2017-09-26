@@ -8,12 +8,11 @@
 
 namespace App\Schema\Contents;
 
-use App\Components\CacheableContext\Context;
-use App\Components\CacheableContext\ContextResolver;
+use App\Components\QueryCache\Context;
 use App\Schema\Contents\Models\Content;
 use Illuminate\Database\Eloquent\Builder;
 
-class ContentQueryContextResolver implements ContextResolver
+class ContentQueryContextResolver extends Context
 {
     protected $supportSortField = [
         'title' => 'title',
@@ -26,28 +25,28 @@ class ContentQueryContextResolver implements ContextResolver
         'desc', 'asc',
     ];
 
-    public function resolve(Context $context)
+    public function resolving($conditions)
     {
         $contentQueryBuilder = Content::query();
 
-        if (isset($context['title']) && ($title = trim($context['title'])) !== '') {
+        if (isset($conditions['query']['title']) && ($title = trim($conditions['query']['title'])) !== '') {
             $contentQueryBuilder->where('title', 'like', "%{$title}%");
         }
 
-        if (isset($context['summary']) && ($summary = trim($context['summary']))) {
+        if (isset($conditions['query']['summary']) && ($summary = trim($conditions['query']['summary']))) {
             $contentQueryBuilder->where(function (Builder $query) use ($summary) {
                 $query->where('description', 'like', "%{$summary}%")->orWhere('keywords', 'like', "%{$summary}%");
             });
         }
 
-        if (isset($context['id']) && is_numeric($id = $context['id'])) {
+        if (isset($conditions['query']['id']) && is_numeric($id = $conditions['query']['id'])) {
             if ($id > 0) {
                 $contentQueryBuilder->where('id', $id);
             }
         }
 
-        $sortField = $context['sort_field'] ?? 'create_time';
-        $sortMethod = $context['sort_method'] ?? 'desc';
+        $sortField = $conditions['query']['sort_field'] ?? 'create_time';
+        $sortMethod = $conditions['query']['sort_method'] ?? 'desc';
 
         if (in_array($sortField, array_keys($this->supportSortField))) {
             if (in_array($sortMethod, $this->supportSortMethod)) {
@@ -55,6 +54,6 @@ class ContentQueryContextResolver implements ContextResolver
             }
         }
 
-        return $contentQueryBuilder;
+        return $contentQueryBuilder->get();
     }
 }

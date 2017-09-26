@@ -1,8 +1,9 @@
 <?php
 
+use App\Schema\Contents\Models\Content;
 use Illuminate\Database\Seeder;
 
-class DatabaseSeeder extends Seeder
+class ContentSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -11,7 +12,6 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // $this->call(UsersTableSeeder::class);
-        $this->call(ContentSeeder::class);
+        factory(Content::class, 50)->create();
     }
 }

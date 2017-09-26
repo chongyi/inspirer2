@@ -21,7 +21,7 @@ class CreateContentTables extends Migration
             $table->text('description')->nullable()->comment('描述');
             $table->integer('entity_id')->unsigned()->nullable()->comment('实体 ID');
             $table->string('entity_type')->nullable()->comment('实体类型');
-            $table->integer('category_id')->unsigned()->index()->comment('分类 ID');
+            $table->integer('category_id')->unsigned()->nullable()->index()->comment('分类 ID');
             $table->timestamp('published_at')->nullable()->comment('发布时间');
             $table->integer('creator_id')->unsigned()->nullable()->comment('创建人');
 

@@ -19,5 +19,7 @@ class ContentService
         $contentQueryBuilder = (new Context())->setContext($conditions)
                                               ->setResolver(ContentQueryContextResolver::class)
                                               ->resolve();
+
+
     }
 }
