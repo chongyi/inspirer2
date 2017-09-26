@@ -8,18 +8,10 @@
 
 namespace App\Schema\Contents;
 
-use App\Components\CacheableContext\Context;
-use Illuminate\Database\Eloquent\Builder;
-
 class ContentService
 {
-    public function getContents($conditions)
+    public function getContents($conditions, $contextName = 'content-list')
     {
-        /** @var Builder $contentQueryBuilder */
-        $contentQueryBuilder = (new Context())->setContext($conditions)
-                                              ->setResolver(ContentQueryContextResolver::class)
-                                              ->resolve();
-
-
+        (new ContentQueryContextResolver($contextName))->resolve($conditions);
     }
 }

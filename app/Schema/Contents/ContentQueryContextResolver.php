@@ -25,7 +25,7 @@ class ContentQueryContextResolver extends Context
         'desc', 'asc',
     ];
 
-    public function resolving($conditions)
+    protected function resolving($conditions)
     {
         $contentQueryBuilder = Content::query();
 
