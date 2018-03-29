@@ -20,7 +20,7 @@ class CreateContentTables extends Migration
             $table->string('keywords')->index()->default('')->comment('关键字');
             $table->text('description')->nullable()->comment('描述');
             $table->integer('entity_id')->unsigned()->nullable()->comment('实体 ID');
-            $table->string('entity_type')->nullable()->comment('实体类型');
+            $table->tinyInteger('entity_type')->unsigned()->nullable()->comment('实体类型');
             $table->integer('category_id')->unsigned()->nullable()->index()->comment('分类 ID');
             $table->timestamp('published_at')->nullable()->comment('发布时间');
             $table->integer('creator_id')->unsigned()->nullable()->comment('创建人');
@@ -54,11 +54,12 @@ class CreateContentTables extends Migration
             $table->integer('content_id')->unsigned()->index()->comment('内容 ID');
             $table->string('origin_source')->nullable()->comment('原始来源');
             $table->mediumText('body');
+            $table->tinyInteger('formatter')->unsigned()->default(0)->comment('内容格式');
             $table->timestamps();
             $table->softDeletes();
         });
 
-        Schema::create('content_entity_messages', function (Blueprint $table) {
+        Schema::create('content_entity_pushes', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('content_id')->unsigned()->index()->comment('内容 ID');
             $table->string('body', 400);
@@ -74,7 +75,7 @@ class CreateContentTables extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('content_entity_messages');
+        Schema::dropIfExists('content_entity_pushes');
         Schema::dropIfExists('content_entity_articles');
         Schema::dropIfExists('content_tags');
         Schema::dropIfExists('content_categories');

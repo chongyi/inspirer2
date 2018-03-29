@@ -1,5 +1,9 @@
 <?php
 
+use App\Http\Controllers;
+use App\Http\Controllers\Blog;
+use Illuminate\Routing\Router;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -11,6 +15,12 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+
+/** @var Router $router */
+$router->get('/', Controllers\HomeController::class . '@index')->name('w:home.index');
+
+$router->group(['prefix' => 'blog'], function (Router $router) {
+    $router->get('{type}/{find}', Blog\MainController::class . '@content')
+           ->where('type', '\w+')
+           ->name('w:blog.content');
 });

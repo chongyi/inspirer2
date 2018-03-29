@@ -19,7 +19,7 @@ class EventServiceProvider extends ServiceProvider
     ];
 
     protected $subscribe = [
-        ContentCategorySubscriber::class,
+//        ContentCategorySubscriber::class,
     ];
 
     /**

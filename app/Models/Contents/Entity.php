@@ -1,28 +1,29 @@
 <?php
 /**
- * ContentEntity.php
+ * Entity.php
  *
  * @copyright Chongyi <xpz3847878@163.com>
  * @link      https://insp.top
  */
 
-namespace App\Schema\Contents\Models;
+namespace App\Models\Contents;
 
+use App\Models\Content;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Class ContentEntity
+ * 实体
  *
- * @property int $id
- * @property int $content_id
+ * @property int     $content_id
  * @property Content $content
+ * @property string  $body
  * @property Carbon $created_at
  * @property Carbon $updated_at
  *
- * @package App\Schema\Contents\Models
+ * @package App\Models\Contents
  */
-abstract class ContentEntity extends Model
+abstract class Entity extends Model
 {
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -30,5 +31,10 @@ abstract class ContentEntity extends Model
     public function content()
     {
         return $this->belongsTo(Content::class, 'content_id', 'id');
+    }
+
+    public static function find(string $find)
+    {
+
     }
 }
